@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giftora — Handmade Gifts & Customized Hampers</title>
+  <meta name="description" content="Giftora offers premium handmade gifts including pipe-cleaner flower bouquets, crochet flowers, personalized hampers, keychains, birthday & anniversary gifts." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Clerk Authentication -->
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_bWFueS10b3VjYW4tMjM2MC5jbGVyay5hY2NvdW50cy5kZXYk"
+    src="https://many-toucan-2360.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+    type="text/javascript"
+  ></script>
+</head>
+<body>
+
+  <!-- ===== ANNOUNCEMENT BAR ===== -->
+  <div class="announcement-bar" id="announcementBar">
+    <span>✨ Free shipping on orders above ₹999 &nbsp;|&nbsp; 🎁 Customization available on all products &nbsp;|&nbsp; 💌 Made with love, delivered with care</span>
+    <button class="announcement-close" id="closeAnnouncement" aria-label="Close announcement">×</button>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#home" class="nav-logo">
+        <img src="giftora_logo.jpeg" alt="Giftora Logo" class="nav-logo-img" />
+        <span class="logo-text">Giftora</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#products" class="nav-link">Shop</a></li>
+        <li><a href="#categories" class="nav-link">Collections</a></li>
+        <li><a href="#customize" class="nav-link">Customize</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="theme-icon sun">☀️</span>
+          <span class="theme-icon moon">🌙</span>
+          <div class="toggle-track"></div>
+        </button>
+        <button class="nav-icon-btn" id="searchBtn" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <button class="nav-icon-btn wishlist-btn" id="wishlistBtn" aria-label="Wishlist">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="badge" id="wishlistBadge">0</span>
+        </button>
+        <button class="nav-icon-btn cart-btn" id="cartBtn" aria-label="Shopping Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="badge" id="cartBadge">0</span>
+        </button>
+        <!-- Clerk Auth Buttons -->
+        <div id="clerkAuthArea" class="clerk-auth-area">
+          <button class="btn btn-outline btn-sm" id="clerkSignInBtn" style="display:none;" onclick="openClerkSignIn()">Sign In</button>
+          <button class="btn btn-primary btn-sm" id="clerkSignUpBtn" style="display:none;" onclick="openClerkSignUp()">Sign Up</button>
+          <div id="clerkUserBtn" style="display:none;"></div>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Clerk Modal Portals -->
+  <div id="clerk-sign-in"></div>
+  <div id="clerk-user-profile"></div>
+
+
+  <!-- ===== SEARCH OVERLAY ===== -->
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-container">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search for gifts, bouquets, hampers..." />
+      <button class="search-close" id="searchClose" aria-label="Close search">×</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <img src="giftora_hero_banner_1791536987181.jpg" alt="Giftora handmade gifts collection" class="hero-img" />
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">✨ Handcrafted with Love</div>
+      <h1 class="hero-title">
+        Gifts That Tell<br/>
+        <span class="hero-title-accent">Your Story</span>
+      </h1>
+      <p class="hero-subtitle">
+        Discover one-of-a-kind handmade bouquets, personalized hampers, and heartfelt gifts — crafted especially for the people you cherish most.
+      </p>
+      <div class="hero-cta">
+        <a href="#products" class="btn btn-primary">
+          <span>Shop Now</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#customize" class="btn btn-outline">Customize Your Gift</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num">2000+</span>
+          <span class="stat-label">Happy Customers</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">500+</span>
+          <span class="stat-label">Unique Designs</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Handmade</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-indicator">
+        <div class="scroll-dot"></div>
+      </div>
+      <span>Scroll to Explore</span>
+    </div>
+  </section>
+
+  <!-- ===== CATEGORIES SECTION ===== -->
+  <section class="categories" id="categories">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Explore</span>
+        <h2 class="section-title">Our Collections</h2>
+        <p class="section-subtitle">Every piece crafted with intention, every gift wrapped with love</p>
+      </div>
+      <div class="categories-grid">
+        <div class="category-card large" data-filter="bouquets">
+          <img src="pipe_cleaner_bouquet_1791536893162.jpg" alt="Pipe Cleaner Flower Bouquets" loading="lazy" />
+          <div class="category-overlay">
+            <div class="category-content">
+              <h3>Pipe Cleaner Bouquets</h3>
+              <p>Everlasting handcrafted floral art</p>
+              <a href="#products" class="category-link">Shop Collection →</a>
+            </div>
+          </div>
+          <div class="category-badge">Bestseller</div>
+        </div>
+        <div class="category-card" data-filter="crochet">
+          <img src="crochet_flowers_1791536921665.jpg" alt="Crochet Flowers" loading="lazy" />
+          <div class="category-overlay">
+            <div class="category-content">
+              <h3>Crochet Flowers</h3>
+              <p>Artisan yarn bouquets</p>
+              <a href="#products" class="category-link">Explore →</a>
+            </div>
+          </div>
+          <div class="category-badge new">New</div>
+        </div>
+        <div class="category-card" data-filter="hampers">
+          <img src="gift_hamper_1791536905323.jpg" alt="Gift Hampers" loading="lazy" />
+          <div class="category-overlay">
+            <div class="category-content">
+              <h3>Gift Hampers</h3>
+              <p>Curated luxury gift boxes</p>
+              <a href="#products" class="category-link">Explore →</a>
+            </div>
+          </div>
+        </div>
+        <div class="category-card" data-filter="keychains">
+          <img src="keychains_collection_1791536934252.jpg" alt="Keychains" loading="lazy" />
+          <div class="category-overlay">
+            <div class="category-content">
+              <h3>Keychains</h3>
+              <p>Personalized mini gifts</p>
+              <a href="#products" class="category-link">Explore →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRODUCTS SECTION ===== -->
+  <section class="products-section" id="products">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Our Handcrafted Gifts</span>
+        <h2 class="section-title">Shop All Products</h2>
+        <p class="section-subtitle">Every item is made to order with premium materials and boundless love</p>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">All Products</button>
+        <button class="filter-btn" data-filter="bouquets">Bouquets</button>
+        <button class="filter-btn" data-filter="crochet">Crochet</button>
+        <button class="filter-btn" data-filter="hampers">Hampers</button>
+        <button class="filter-btn" data-filter="keychains">Keychains</button>
+        <button class="filter-btn" data-filter="birthday">Birthday</button>
+        <button class="filter-btn" data-filter="anniversary">Anniversary</button>
+      </div>
+
+      <!-- Sort & Count -->
+      <div class="products-toolbar">
+        <span class="product-count" id="productCount">Showing 8 products</span>
+        <select class="sort-select" id="sortSelect">
+          <option value="default">Featured</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="products-grid" id="productsGrid">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED / SPECIAL BANNER ===== -->
+  <section class="feature-banner">
+    <div class="feature-banner-inner">
+      <div class="feature-left">
+        <img src="birthday_gift_box_1791536960110.jpg" alt="Birthday Gift Box" loading="lazy" />
+      </div>
+      <div class="feature-right">
+        <span class="section-tag">Most Loved</span>
+        <h2>Birthday Surprise Boxes</h2>
+        <p>Make their day truly magical with our curated birthday gift boxes — featuring handmade flowers, personalized messages, and sweet surprises wrapped in gold and pink.</p>
+        <ul class="feature-list">
+          <li>✦ Fully customizable contents</li>
+          <li>✦ Personalized name cards</li>
+          <li>✦ Premium gift wrapping</li>
+          <li>✦ Same-day delivery available</li>
+        </ul>
+        <a href="#products" class="btn btn-primary">Shop Birthday Gifts</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ANNIVERSARY BANNER ===== -->
+  <section class="feature-banner anniversary">
+    <div class="feature-banner-inner reverse">
+      <div class="feature-left">
+        <img src="anniversary_gift_1791536973917.jpg" alt="Anniversary Gift Set" loading="lazy" />
+      </div>
+      <div class="feature-right">
+        <span class="section-tag romantic">Romance</span>
+        <h2>Anniversary Gift Sets</h2>
+        <p>Celebrate love with our exquisite anniversary collections — featuring deep burgundy velvet boxes, golden accents, handcrafted roses, and romantic keepsakes that speak straight to the heart.</p>
+        <ul class="feature-list">
+          <li>♥ Custom engraving available</li>
+          <li>♥ Handpicked luxury items</li>
+          <li>♥ Beautiful velvet packaging</li>
+          <li>♥ Heartfelt message included</li>
+        </ul>
+        <a href="#products" class="btn btn-primary romantic-btn">Shop Anniversary Gifts</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CUSTOMIZE SECTION ===== -->
+  <section class="customize-section" id="customize">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Personalize</span>
+        <h2 class="section-title">Build Your Dream Gift</h2>
+        <p class="section-subtitle">Create a one-of-a-kind, truly personal gift in just a few steps</p>
+      </div>
+      <div class="customize-steps">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <div class="step-icon">🌸</div>
+          <h3>Choose Base</h3>
+          <p>Select your preferred base — flowers, hamper, or keychains</p>
+        </div>
+        <div class="step-connector">→</div>
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <div class="step-icon">🎨</div>
+          <h3>Pick Colors</h3>
+          <p>Choose your favorite color palette or theme</p>
+        </div>
+        <div class="step-connector">→</div>
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <div class="step-icon">✍️</div>
+          <h3>Add Message</h3>
+          <p>Write a personalized note or name to include</p>
+        </div>
+        <div class="step-connector">→</div>
+        <div class="step-card">
+          <div class="step-number">04</div>
+          <div class="step-icon">📦</div>
+          <h3>We Create & Deliver</h3>
+          <p>Sit back while we handcraft and ship your special gift</p>
+        </div>
+      </div>
+      <div class="customize-cta">
+        <a href="#contact" class="btn btn-primary btn-lg">Start Customizing</a>
+        <p class="customize-note">💬 WhatsApp us to discuss your vision: <strong>+91 98765 43210</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials-section" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Love Notes</span>
+        <h2 class="section-title">What Our Customers Say</h2>
+        <p class="section-subtitle">Real joy from real people — every gift a cherished memory</p>
+      </div>
+      <div class="testimonials-carousel" id="testimonialsCarousel">
+        <div class="testimonial-track" id="testimonialTrack">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"I ordered a customized hamper for my best friend's birthday and she cried happy tears. The quality is unreal! Every little detail was perfect. Giftora truly creates magic."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">P</div>
+              <div>
+                <strong>Priya Sharma</strong>
+                <span>Delhi, India</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"The pipe-cleaner bouquet is so beautiful it doesn't even look handmade — it looks like professional art. My mom keeps it on display and everyone asks where it's from!"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">A</div>
+              <div>
+                <strong>Ananya Rao</strong>
+                <span>Bangalore, India</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Ordered anniversary gift box last minute and they delivered same day! The velvet packaging and roses were absolutely stunning. My husband loved every bit of it. 10/10!"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">M</div>
+              <div>
+                <strong>Meera Nair</strong>
+                <span>Mumbai, India</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"The keychains are adorable! Got personalized ones for my whole friend group and everyone loved them. Affordable, pretty, and so thoughtfully made. Will order again!"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">R</div>
+              <div>
+                <strong>Riya Kapoor</strong>
+                <span>Pune, India</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"As someone who values sustainability, I love that everything is handmade and thoughtful. The crochet flower bouquet is timeless and my partner keeps it on their desk every day."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">S</div>
+              <div>
+                <strong>Sneha Gupta</strong>
+                <span>Hyderabad, India</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-controls">
+          <button class="carousel-btn prev" id="prevBtn" aria-label="Previous testimonial">‹</button>
+          <div class="carousel-dots" id="carouselDots"></div>
+          <button class="carousel-btn next" id="nextBtn" aria-label="Next testimonial">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHY US ===== -->
+  <section class="why-us">
+    <div class="container">
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">🌿</div>
+          <h3>100% Handmade</h3>
+          <p>Every piece is crafted by hand with love and attention to detail — no machines, no shortcuts.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🎯</div>
+          <h3>Fully Customizable</h3>
+          <p>From colors to messages, every gift can be tailored to perfectly match your vision.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🚚</div>
+          <h3>Fast Delivery</h3>
+          <p>Same-day and express delivery options available. We never let your gift arrive late.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">💖</div>
+          <h3>Made with Emotions</h3>
+          <p>We put our hearts into every creation — because your loved ones deserve the very best.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT SECTION ===== -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-image">
+          <img src="crochet_flowers_1791536921665.jpg" alt="About Giftora" loading="lazy" />
+          <div class="about-badge-card">
+            <span class="about-badge-num">5+</span>
+            <span class="about-badge-text">Years of Crafting</span>
+          </div>
+        </div>
+        <div class="about-content">
+          <span class="section-tag">Our Story</span>
+          <h2>Crafted from Passion, Delivered with Love</h2>
+          <p>Giftora was born from a simple belief — that gifts should feel as special as the people receiving them. What started as a hobby in our living room has blossomed into a brand trusted by thousands across India.</p>
+          <p>Each product is made by hand, using carefully sourced materials, and wrapped with the same care you'd give your dearest friend. From pipe-cleaner bouquets that never wilt, to crochet flowers that spark joy — we create gifts that last forever, just like your memories.</p>
+          <div class="about-highlights">
+            <div class="highlight">
+              <span class="highlight-num">2000+</span>
+              <span class="highlight-text">Happy Customers</span>
+            </div>
+            <div class="highlight">
+              <span class="highlight-num">500+</span>
+              <span class="highlight-text">Unique Designs</span>
+            </div>
+            <div class="highlight">
+              <span class="highlight-num">50+</span>
+              <span class="highlight-text">Cities Reached</span>
+            </div>
+          </div>
+          <a href="#contact" class="btn btn-outline">Get in Touch</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT SECTION ===== -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Let's Connect</span>
+        <h2 class="section-title">Get in Touch</h2>
+        <p class="section-subtitle">Have a custom order in mind? We'd love to hear from you!</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-form-wrapper">
+          <form class="contact-form" id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contactName">Your Name *</label>
+                <input type="text" id="contactName" name="name" placeholder="e.g. Priya Sharma" required />
+              </div>
+              <div class="form-group">
+                <label for="contactEmail">Email Address *</label>
+                <input type="email" id="contactEmail" name="email" placeholder="you@example.com" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contactPhone">Phone Number</label>
+              <input type="tel" id="contactPhone" name="phone" placeholder="+91 98765 43210" />
+            </div>
+            <div class="form-group">
+              <label for="contactType">Gift Type</label>
+              <select id="contactType" name="giftType">
+                <option value="">Select a gift type...</option>
+                <option value="bouquet">Pipe-Cleaner Bouquet</option>
+                <option value="crochet">Crochet Flowers</option>
+                <option value="hamper">Gift Hamper</option>
+                <option value="keychain">Keychain</option>
+                <option value="birthday">Birthday Gift</option>
+                <option value="anniversary">Anniversary Gift</option>
+                <option value="custom">Custom Creation</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contactMessage">Your Message *</label>
+              <textarea id="contactMessage" name="message" rows="5" placeholder="Tell us about your dream gift — occasion, colors, names, any special requests..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+              <span>Send Message</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </form>
+          <div class="form-success" id="formSuccess" style="display:none;">
+            <div class="success-icon">🎉</div>
+            <h3>Message Sent!</h3>
+            <p>Thank you for reaching out! We'll get back to you within 24 hours.</p>
+            <button class="btn btn-outline" id="resetForm">Send Another Message</button>
+          </div>
+        </div>
+        <div class="contact-info">
+          <div class="contact-card">
+            <div class="contact-icon">📱</div>
+            <h4>WhatsApp Us</h4>
+            <p>Chat with us directly for quick custom orders</p>
+            <a href="https://wa.me/919876543210" class="contact-link" target="_blank" rel="noopener">+91 98765 43210</a>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon">📧</div>
+            <h4>Email Us</h4>
+            <p>For detailed inquiries and custom requests</p>
+            <a href="mailto:hello@giftora.in" class="contact-link">hello@giftora.in</a>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon">📍</div>
+            <h4>Visit Us</h4>
+            <p>Bangalore, Karnataka, India</p>
+            <span class="contact-link">By appointment only</span>
+          </div>
+          <div class="contact-social">
+            <h4>Follow Our Journey</h4>
+            <div class="social-links">
+              <a href="#" class="social-btn instagram" aria-label="Instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+              <a href="#" class="social-btn facebook" aria-label="Facebook">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href="#" class="social-btn pinterest" aria-label="Pinterest">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.372-12 12 0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="giftora_logo.jpeg" alt="Giftora Logo" class="footer-logo-img" />
+            <span class="logo-text">Giftora</span>
+          </div>
+          <p>Handcrafted gifts that speak from the heart — made with love, delivered with joy.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram">📸</a>
+            <a href="#" aria-label="Facebook">👥</a>
+            <a href="#" aria-label="Pinterest">📌</a>
+            <a href="#" aria-label="WhatsApp">💬</a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#products">Shop</a></li>
+            <li><a href="#categories">Collections</a></li>
+            <li><a href="#customize">Customize</a></li>
+            <li><a href="#about">About Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Gift Categories</h4>
+          <ul>
+            <li><a href="#products">Pipe-Cleaner Bouquets</a></li>
+            <li><a href="#products">Crochet Flowers</a></li>
+            <li><a href="#products">Gift Hampers</a></li>
+            <li><a href="#products">Keychains</a></li>
+            <li><a href="#products">Birthday Gifts</a></li>
+            <li><a href="#products">Anniversary Gifts</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Help & Support</h4>
+          <ul>
+            <li><a href="#">Shipping Policy</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Custom Orders</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Giftora. All rights reserved. Made with ❤️ in India.</p>
+        <div class="payment-icons">
+          <span>💳 Cards</span>
+          <span>📱 UPI</span>
+          <span>🏦 Net Banking</span>
+          <span>💵 COD</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== CART SIDEBAR ===== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3>Your Cart 🛍️</h3>
+      <button class="cart-close" id="cartClose" aria-label="Close cart">×</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty" id="cartEmpty">
+        <div class="cart-empty-icon">🛒</div>
+        <p>Your cart is empty</p>
+        <a href="#products" class="btn btn-outline btn-sm">Start Shopping</a>
+      </div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">₹0</span>
+      </div>
+      <div class="cart-shipping">
+        <span>Shipping</span>
+        <span id="cartShipping">FREE</span>
+      </div>
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cartTotal">₹0</span>
+      </div>
+      <button class="btn btn-primary btn-full" id="checkoutBtn">Proceed to Checkout</button>
+      <button class="btn btn-outline btn-full" id="clearCartBtn">Clear Cart</button>
+    </div>
+  </aside>
+
+  <!-- ===== PRODUCT MODAL ===== -->
+  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="product-modal" id="productModal">
+    <button class="modal-close" id="modalClose" aria-label="Close modal">×</button>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+
+  <!-- ===== CHECKOUT MODAL ===== -->
+  <div class="checkout-modal" id="checkoutModal">
+    <div class="checkout-inner">
+      <button class="modal-close" id="checkoutClose">×</button>
+      <h2>Checkout</h2>
+      <div class="checkout-grid">
+        <div class="checkout-form-section">
+          <h3>Delivery Details</h3>
+          <form id="checkoutForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" placeholder="Priya" required />
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" placeholder="Sharma" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" placeholder="+91 98765 43210" required />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" placeholder="you@example.com" required />
+            </div>
+            <div class="form-group">
+              <label>Delivery Address</label>
+              <textarea rows="3" placeholder="House No., Street, Area..." required></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" placeholder="Bangalore" required />
+              </div>
+              <div class="form-group">
+                <label>PIN Code</label>
+                <input type="text" placeholder="560001" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Gift Message (optional)</label>
+              <textarea rows="2" placeholder="Add a heartfelt message..."></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="checkout-summary-section">
+          <h3>Order Summary</h3>
+          <div class="checkout-items" id="checkoutItems"></div>
+          <div class="checkout-totals">
+            <div class="checkout-row"><span>Subtotal</span><span id="checkoutSubtotal">₹0</span></div>
+            <div class="checkout-row"><span>Shipping</span><span>FREE</span></div>
+            <div class="checkout-row total"><span>Total</span><span id="checkoutTotal">₹0</span></div>
+          </div>
+          <div class="payment-methods">
+            <h4>Payment Method</h4>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="upi" checked /> UPI / QR Code
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="card" /> Credit / Debit Card
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="netbanking" /> Net Banking
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="cod" /> Cash on Delivery
+            </label>
+          </div>
+          <button class="btn btn-primary btn-full" id="placeOrderBtn">Place Order 🎁</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ORDER SUCCESS ===== -->
+  <div class="order-success-overlay" id="orderSuccessOverlay" style="display:none;">
+    <div class="order-success-card">
+      <div class="success-animation">🎊</div>
+      <h2>Order Placed!</h2>
+      <p>Thank you for your order! We've received it and will start crafting your gift with love right away.</p>
+      <div class="order-id">Order ID: <strong id="orderId"></strong></div>
+      <p class="order-note">You'll receive a confirmation on WhatsApp/Email within 30 minutes.</p>
+      <button class="btn btn-primary" id="closeOrderSuccess">Continue Shopping</button>
+    </div>
+  </div>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ===== BACK TO TOP ===== -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+  <script src="app.js"></script>
+</body>
+</html>
